@@ -5,3 +5,4 @@ class Settings:
 		self.screen_height = 1200
 		self.screen_width = 800
 		self.screen_background = (230,230,230)
+		self.speed = 1.5

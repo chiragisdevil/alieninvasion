@@ -9,16 +9,39 @@ class AlienInvasion:
 		'''Initialize the pygame and also call the set_mode for screensize and set_caption for setting the screen caption'''
 		pygame.init()
 		self.settings = Settings()
-		self.screen = pygame.display.set_mode((self.settings.screen_height,self.settings.screen_width))
+		# self.screen = pygame.display.set_mode((self.settings.screen_height,self.settings.screen_width))
+		self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
+		self.settings.screen_height = self.screen.get_rect().height
+		self.settings.screen_width = self.screen.get_rect().width
 		pygame.display.set_caption("Alien Invasion!!!")
 		self.bg_color = self.settings.screen_background
 		self.ship = Ship(self)
+
+	def _check_keydown_events(self,event):
+		'''Respond to Keydown Events'''
+		if event.key == pygame.K_RIGHT:
+			self.ship.movement_right = True
+		elif event.key == pygame.K_LEFT:
+			self.ship.movement_left = True
+		elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+			sys.exit()
+
+	def _check_keyup_events(self,event):
+		'''Respond to Keyup events'''
+		if event.key == pygame.K_RIGHT:
+			self.ship.movement_right = False
+		elif event.key == pygame.K_LEFT:
+			self.ship.movement_left = False
 
 	def _check_events(self):
 		'''Checks for events from keyboard and mouse and exits if a quit event (x) is received'''
 		for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					sys.exit()
+				elif event.type == pygame.KEYDOWN:
+					self._check_keydown_events(event)
+				elif event.type == pygame.KEYUP:
+					self._check_keyup_events(event)
 
 	def _update_screen(self):
 		'''Updates the screen to fill background color and then draw the ship image'''
@@ -33,6 +56,7 @@ class AlienInvasion:
 		while True:
 			# Watch for keyboard and mouse events
 			self._check_events()
+			self.ship.update_position()
 			self._update_screen()
 
 if __name__ == "__main__":
